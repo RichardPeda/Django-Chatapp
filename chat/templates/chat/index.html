@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if request.user.is_authenticated %}
+
+<script>
+
+    let currentMessage = {}
+
+    async function sendMessage() {
+        let fd = new FormData();
+        let token = '{{ csrf_token }}'
+        let user = '{{ request.user }}'
+
+        let date = new Date()
+        let container = document.getElementById('messageContainer')
+        container.innerHTML += temporaryMessageHTML(user, inputMessage.value, date)
+
+        fd.append('textmessage', inputMessage.value);
+        fd.append('csrfmiddlewaretoken', token);
+        try {
+            let resp = await fetch('/chat/?user=isabella', {
+                method: 'POST',
+                body: fd
+            })
+            let message = await resp.json()
+
+            setTimeout(() => {
+                if (message) {
+                    let deleteMessage = document.getElementById('deleteMessage')
+                    deleteMessage.remove()
+                }
+
+                currentMessage = JSON.parse(message)
+                container.innerHTML += renderMessageHTML(currentMessage.fields.author, currentMessage.fields.text, currentMessage.fields.created_at)
+
+            }, 3000);
+
+        } catch (e) {
+            console.error('an error occured', e)
+        }
+
+
+    }
+
+    function temporaryMessageHTML(user, message, date) {
+        return /*html*/`
+        <div id="deleteMessage">
+                [${date}] ${user}: ${message}
+        </div>
+        `    }
+
+    function renderMessageHTML(user, message, date) {
+        return /*html*/`
+        <div>
+                [${date}] ${user}: ${message}
+        </div>
+        `    }
+
+
+</script>
+
+<h1>Chat-App</h1>
+<h2>Willkommen, {{request.user}}</h2>
+
+<form onsubmit="sendMessage(); return false" method="post">
+    {% csrf_token %}
+    <input type="text" name="textmessage" id="inputMessage">
+    <button>Send</button>
+</form>
+
+<div>
+    <h1>Deine Nachrichten</h1>
+
+    <div id="messageContainer">
+        {% for message in messages %}
+        <div>
+            [{{message.created_at}}] {{message.author}}: {{ message.text }}
+        </div>
+
+        {% endfor %}
+    </div>
+</div>
+{% else %}
+<div>
+    <h1>Du bist nicht eingeloggt</h1>
+    <p>um dich einzuloggen klicke <a href="/login/">hier</a></p>
+</div>
+{% endif %}
+
+{% endblock %}

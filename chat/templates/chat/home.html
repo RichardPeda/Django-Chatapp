@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if request.user.is_authenticated %}
+
+
+<h1>Dashboard</h1>
+<h3>Here are your Contacts</h3>
+
+
+<div>
+ 
+
+    <div id="messageContainer">
+        {% for contact in contacts %}
+        <div>
+           
+           <p>
+            {{contact.username}}
+           </p>
+           
+        </div>
+
+        {% endfor %}
+    </div>
+</div>
+{% else %}
+<div>
+    <h1>Du bist nicht eingeloggt</h1>
+    <p>um dich einzuloggen klicke <a href="/login/">hier</a></p>
+</div>
+{% endif %}
+
+{% endblock %}

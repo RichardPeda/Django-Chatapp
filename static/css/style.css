@@ -1,0 +1,29 @@
+*{
+    box-sizing: border-box;
+}
+body{
+    margin: 0;
+}
+
+h1{
+    font-size: 24px !important;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.login-form{
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+}
+.login-form input,
+.login-form button{
+    margin: 12px;
+}
+
+.mdl-layout__container{
+    position: fixed;
+    top: 0;
+}
+.page-content{
+    margin-left: 30px;
+}
