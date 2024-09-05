@@ -19,18 +19,25 @@ def home(request):
        
         
         this_chat = Chat.objects.filter(author = request.user, receiver = obj_contact.id)
+        chat_id = this_chat.values_list('id', flat=True).first()
+        print(chat_id)
         if not this_chat:
             print('empty_chat1')
+            
             this_chat = Chat.objects.filter(receiver = request.user, author = obj_contact.id)
+            chat_id = this_chat.values_list('id', flat=True).first()
+            
             if not this_chat:  
                 print('empty_chat2')
                 this_chat = Chat.objects.create(author = request.user, receiver = obj_contact)
+                chat_id = this_chat.id
                 print('chat erstellt', this_chat.id)
         if this_chat:
             print('chat gefunden')
+          
             # print(this_chat.values())
             # chat_id = this_chat.values_list('id', flat=True).first()
-            chat_id = this_chat.id
+           
             return HttpResponse(str(chat_id))
 
     if(request.method == 'GET'):
