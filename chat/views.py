@@ -1,4 +1,4 @@
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import redirect, render
 from chat.models import Message,Chat
 from django.contrib.auth import authenticate, login
@@ -11,28 +11,65 @@ from django.http import JsonResponse
 
 @login_required(login_url='/login/')
 def home(request):
-    contacts = User.objects.exclude(username = request.user)        
+
+    if (request.method == 'POST'):
+        contact = request.POST['contact']
+        obj_contact = User.objects.get(username = contact)
+        print(obj_contact.id)
+       
         
-    return render(request, 'chat/home.html', {'contacts': contacts})
+        this_chat = Chat.objects.filter(author = request.user, receiver = obj_contact.id)
+        if not this_chat:
+            print('empty_chat1')
+            this_chat = Chat.objects.filter(receiver = request.user, author = obj_contact.id)
+            if not this_chat:  
+                print('empty_chat2')
+                this_chat = Chat.objects.create(author = request.user, receiver = obj_contact)
+                print('chat erstellt', this_chat.id)
+        if this_chat:
+            print('chat gefunden')
+            # print(this_chat.values())
+            # chat_id = this_chat.values_list('id', flat=True).first()
+            chat_id = this_chat.id
+            return HttpResponse(str(chat_id))
+
+    if(request.method == 'GET'):
+
+        contacts = User.objects.exclude(username = request.user)        
+        
+        return render(request, 'chat/home.html', {'contacts': contacts})
 
 
 
 @login_required(login_url='/login/')
-def index(request):
-    if(request.method == 'POST'):
-        mychat = Chat.objects.get(id=1)
-        print(request.user)
+def create_chat(request):
+    pass
+    
+
+                
+
+@login_required(login_url='/login/')
+def chat(request):
+    chat_id = request.GET.get('id')
+    mychat = Chat.objects.get(id=chat_id)
+   
+    if (request.method == 'POST'):
+        
+        
+        
         new_message = Message.objects.create(text=request.POST['textmessage'], chat=mychat, author=request.user, receiver=request.user)
         serialized_obj = serializers.serialize('json', [new_message])
         return JsonResponse(serialized_obj[1:-1], safe=False)
-    if(request.method == 'GET'):
+    if (request.method == 'GET'):
+        if(mychat.author == request.user):
+            receiver = mychat.receiver
+        else:
+            receiver = mychat.author
+        chatmessages = Message.objects.filter(chat__id=chat_id)
+    #   
+        return render(request, 'chat/chatroom.html',  {'messages' : chatmessages, 'id' : chat_id, 'receiver' : receiver})
 
-        myuser = request.GET.get('user')
-        print(myuser)
 
-        chatmessages = Message.objects.filter(chat__id=1)
-        return render(request, 'chat/index.html', {'messages': chatmessages})
-    
 
 def login_view(request):
     if(request.method == 'POST'):

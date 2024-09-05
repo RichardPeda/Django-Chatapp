@@ -8,18 +8,43 @@
 <h1>Dashboard</h1>
 <h3>Here are your Contacts</h3>
 
+<script>
+    async function startChat(contact) {
+        let token = '{{ csrf_token }}'
+        let url = '/home/'
+
+        let fd = new FormData();
+        fd.append('contact', contact);
+        fd.append('csrfmiddlewaretoken', token);
+
+        let resp = await fetch(url, {
+            method: 'POST',
+            body: fd
+        })
+        let id = await resp.json()
+        if (id) {
+            window.location.href = `../chat?id=${id}`;
+
+        }
+
+    }
+</script>
 
 <div>
- 
 
-    <div id="messageContainer">
+
+    <div id="contact-container">
+        {% csrf_token %}
         {% for contact in contacts %}
         <div>
-           
-           <p>
-            {{contact.username}}
-           </p>
-           
+
+
+            <div onclick="startChat('{{contact.username}}')" class="contact">
+                {{contact.username}}
+            </div>
+
+
+
         </div>
 
         {% endfor %}

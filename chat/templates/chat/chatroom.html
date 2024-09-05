@@ -12,6 +12,9 @@
         let fd = new FormData();
         let token = '{{ csrf_token }}'
         let user = '{{ request.user }}'
+        let id = '{{ id }}'
+        console.log(id);
+        
 
         let date = new Date()
         let container = document.getElementById('messageContainer')
@@ -20,11 +23,12 @@
         fd.append('textmessage', inputMessage.value);
         fd.append('csrfmiddlewaretoken', token);
         try {
-            let resp = await fetch('/chat/?user=isabella', {
+            let resp = await fetch(`/chat/?id=${id}`, {
                 method: 'POST',
                 body: fd
             })
             let message = await resp.json()
+            inputMessage.value = ''
 
             setTimeout(() => {
                 if (message) {
@@ -62,7 +66,11 @@
 </script>
 
 <h1>Chat-App</h1>
-<h2>Willkommen, {{request.user}}</h2>
+{% if request.user.first_name %}
+<h2>Welcome, {{request.user.first_name}} ({{request.user}})</h2>
+{% else %}
+<h2>Welcome, ({{request.user}})</h2>
+{% endif %}
 
 <form onsubmit="sendMessage(); return false" method="post">
     {% csrf_token %}
@@ -71,7 +79,11 @@
 </form>
 
 <div>
-    <h1>Deine Nachrichten</h1>
+    {% if receiver.first_name %}
+    <h1>Your conversation with {{receiver.first_name}} ({{receiver}})</h1>
+    {% else %}
+    <h1>Your conversation with ({{receiver}})</h1>
+    {% endif %}
 
     <div id="messageContainer">
         {% for message in messages %}
@@ -84,8 +96,8 @@
 </div>
 {% else %}
 <div>
-    <h1>Du bist nicht eingeloggt</h1>
-    <p>um dich einzuloggen klicke <a href="/login/">hier</a></p>
+    <h1>Your are not logged in</h1>
+    <p>For login click <a href="/login/">here</a></p>
 </div>
 {% endif %}
 
