@@ -5,6 +5,7 @@ from django.conf import settings
 
 class Contact(models.Model):
     contact = models.CharField(max_length=15)
+    male = models.BooleanField(default=True)
 
 class Chat(models.Model):
     created_at = models.DateField(default=date.today)

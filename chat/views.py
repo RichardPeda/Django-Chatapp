@@ -46,7 +46,7 @@ def home(request):
 
     if(request.method == 'GET'):
 
-        contacts = Contact.objects.values('contact')           
+        contacts = Contact.objects.all()     
         return render(request, 'chat/home.html', {'contacts': contacts})
 
 
@@ -73,10 +73,11 @@ def chat(request):
         serialized_obj = serializers.serialize('json', [new_message])
         return JsonResponse(serialized_obj[1:-1], safe=False)
     if (request.method == 'GET'):
+        contacts = Contact.objects.all()     
         receiver = mychat.receiver.contact
         chatmessages = Message.objects.filter(chat__id=chat_id)
      
-        return render(request, 'chat/chatroom.html',  {'messages' : chatmessages, 'id' : chat_id, 'receiver' : receiver})
+        return render(request, 'chat/chatroom.html',  {'messages' : chatmessages, 'id' : chat_id, 'receiver' : receiver, 'contacts':contacts})
 
 
 
@@ -98,10 +99,10 @@ def register(request):
         passwort_2 = request.POST['passwordConfirm']
         if passwort_1 == passwort_2:
             user = User.objects.create_user(username=name, password=passwort_1)
-            Contact.objects.get_or_create(contact = 'Mario')
-            Contact.objects.get_or_create(contact = 'Helena')
-            Contact.objects.get_or_create(contact = 'Florian')
-            Contact.objects.get_or_create(contact = 'Anna')
+            Contact.objects.get_or_create(contact = 'Mario', male = True)
+            Contact.objects.get_or_create(contact = 'Helena', male = False)
+            Contact.objects.get_or_create(contact = 'Florian', male = True)
+            Contact.objects.get_or_create(contact = 'Anna', male = False)
 
         if user:
             return HttpResponseRedirect('/login/')   

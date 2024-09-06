@@ -1,12 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-{% if request.user.is_authenticated %}
-
-
-<h1>Dashboard</h1>
-<h3>Here are your Contacts</h3>
+{% load static %}
 
 <script>
     async function startChat(contact) {
@@ -15,7 +10,7 @@
 
         let fd = new FormData();
         fd.append('contact', contact);
-        
+
         fd.append('csrfmiddlewaretoken', token);
 
         let resp = await fetch(url, {
@@ -31,31 +26,45 @@
     }
 </script>
 
-<div>
+{% if request.user.is_authenticated %}
+<div class="sidebar">
 
+    <h5 style="color: white;">Select a contact to chat</h5>
 
     <div id="contact-container">
         {% csrf_token %}
         {% for contact in contacts %}
         <div>
-
-
             <div onclick="startChat('{{contact.contact}}')" class="contact">
+                {% if contact.male %}
+                <img class="avatar" src="{% static 'assets/img/avatar_male_1.png'%}" alt="">
+                {% else %}
+                <img class="avatar" src="{% static 'assets/img/avatar_female_1.png'%}" alt="">
+                {% endif %}
                 {{contact.contact}}
             </div>
-
-
-
         </div>
-
         {% endfor %}
     </div>
 </div>
-{% else %}
-<div>
-    <h1>Du bist nicht eingeloggt</h1>
-    <p>um dich einzuloggen klicke <a href="/login/">hier</a></p>
+<div class="main-content">
+
+    <h1>No active Chat</h1>
+
+
 </div>
+{% else %}
+<div class="sidebar"></div>
+<div class="main-content">
+    <div>
+        <h1>Du bist nicht eingeloggt</h1>
+        <p>um dich einzuloggen klicke <a href="/login/">hier</a></p>
+    </div>
+</div>
+
 {% endif %}
 
 {% endblock %}
+
+
+</div>

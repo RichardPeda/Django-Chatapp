@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+{% load static %}
 
 {% if request.user.is_authenticated %}
 
@@ -39,6 +40,8 @@
                 }
 
                 currentMessage = JSON.parse(message)
+                console.log(currentMessage);
+                
                 container.innerHTML += renderMessageHTML(currentMessage.fields.author, currentMessage.fields.text, currentMessage.fields.created_at)
 
             }, 3000);
@@ -66,25 +69,63 @@
 
 
 </script>
+<script>
+    async function startChat(contact) {
+        let token = '{{ csrf_token }}'
+        let url = '/home/'
 
-{% if request.user.first_name %}
-<h2>Welcome, {{request.user.first_name}} ({{request.user}})</h2>
-{% else %}
-<h2>Welcome, ({{request.user}})</h2>
-{% endif %}
+        let fd = new FormData();
+        fd.append('contact', contact);
+
+        fd.append('csrfmiddlewaretoken', token);
+
+        let resp = await fetch(url, {
+            method: 'POST',
+            body: fd
+        })
+        let id = await resp.json()
+        if (id) {
+            window.location.href = `../chat?id=${id}`;
+        }
+    }
+    function backToHome() {
+        window.location.href = '/home'
+    }
+</script>
 
 
+<div class="sidebar">
 
-<div>
+    <h5 style="color: white;">Select a contact to chat</h5>
 
+    <div id="contact-container">
+        {% csrf_token %}
+        {% for contact in contacts %}
+        <div>
+            <div onclick="startChat('{{contact.contact}}')" class="contact">
+                {% if contact.male %}
+                <img class="avatar" src="{% static 'assets/img/avatar_male_1.png'%}" alt="">
+                {% else %}
+                <img class="avatar" src="{% static 'assets/img/avatar_female_1.png'%}" alt="">
+                {% endif %}
+                {{contact.contact}}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+<div class="main-content">
+
+    <button style="margin-left: 0;" onclick="backToHome()"
+        class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored">
+        <i class="material-icons">arrow_back</i>
+    </button>
 
     <h1>Your private conversation with {{receiver}}</h1>
-    
-    <form  onsubmit="sendMessage(); return false" method="post">
-    {% csrf_token %}
-    <input type="text" name="textmessage" id="inputMessage">
-    <button>Send</button>
-    </form>
+
+
 
     <div id="messageContainer">
         {% for message in messages %}
@@ -94,6 +135,15 @@
 
         {% endfor %}
     </div>
+    <form class="message-form" onsubmit="sendMessage(); return false" method="post">
+        {% csrf_token %}
+
+        <div class="mdl-textfield mdl-js-textfield">
+            <input class="mdl-textfield__input" name="textmessage" id="inputMessage">
+            <label class="mdl-textfield__label" for="inputMessage">Text...</label>
+        </div>
+        <button>Send</button>
+    </form>
 </div>
 
 
