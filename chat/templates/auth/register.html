@@ -3,20 +3,45 @@
 
 {% block content %}
 
-<h1>Register</h1>
+<div class="main-content register">
 
-{% if wrongPassword %}
-<h1>Wrong username or password, please try again!</h1>
-{% endif %}
+    <h1>Register</h1>
 
-<form class="login-form" method="post" action="/register/">
-    {% csrf_token %}
-    <input type="text" name="username" placeholder="username" />
-    <input type="text" name="firstName" placeholder="first name" />
-    <input type="password" name="password" placeholder="password" />
-    <input type="password" name="passwordConfirm" placeholder="confirm password" />
+    {% if wrongPassword %}
+    <h1>Wrong username or password, please try again!</h1>
+    {% endif %}
 
-    <button>Register</button>
-</form>
+    <form class="login-form" method="post" action="/register/">
+        {% csrf_token %}
+
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input class="mdl-textfield__input " name="username" id="username" required>
+            <label class="mdl-textfield__label" for="username">Username...</label>
+        </div>
+
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input class="mdl-textfield__input" type="email" name="mail" id="mail"
+                pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}" required>
+            <label class="mdl-textfield__label" for="mail">Email...</label>
+        </div>
+
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input class="mdl-textfield__input" type="password" name="password" id="password" minlength="5" required>
+            <label class="mdl-textfield__label" for="password">Passwort...</label>
+        </div>
+
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input class="mdl-textfield__input" type="password" name="passwordConfirm" id="passwordConfirm"
+                minlength="5" required>
+            <label class="mdl-textfield__label" for="passwordConfirm">Confirm passwort...</label>
+        </div>
+
+      
+        <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+            Register
+        </button>
+
+    </form>
+</div>
 
 {% endblock %}

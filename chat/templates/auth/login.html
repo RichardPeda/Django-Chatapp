@@ -3,19 +3,30 @@
 
 {% block content %}
 
-<h1>Login</h1>
 
-{% if wrongPassword %}
-<h1>Wrong username or password, please try again!</h1>
-{% endif %}
+<div class="sidebar">
 
-<form class="login-form" method="post" action="/login/">
-    {% csrf_token %}
-    <input type="text" name="username" placeholder="username" />
-    <input type="password" name="password" placeholder="password" />
-    <button>Login</button>
-</form>
+   
+</div>
 
-<p>Not registered yet, register <a href="/register/">here</a></p>
+
+<div class="main-content">
+    <h1>Login</h1>
+
+    {% if wrongPassword %}
+    <h1>Wrong username or password, please try again!</h1>
+    {% endif %}
+
+    <form class="login-form" method="post" action="/login/">
+        {% csrf_token %}
+        <input type="text" name="username" placeholder="username" />
+        <input type="password" name="password" placeholder="password" />
+        <button>Login</button>
+    </form>
+
+    <p>Not registered yet, register <a href="/register/">here</a></p>
+</div>
+
+
 
 {% endblock %}
