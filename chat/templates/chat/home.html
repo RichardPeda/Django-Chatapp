@@ -15,6 +15,7 @@
 
         let fd = new FormData();
         fd.append('contact', contact);
+        
         fd.append('csrfmiddlewaretoken', token);
 
         let resp = await fetch(url, {
@@ -39,8 +40,8 @@
         <div>
 
 
-            <div onclick="startChat('{{contact.username}}')" class="contact">
-                {{contact.username}}
+            <div onclick="startChat('{{contact.contact}}')" class="contact">
+                {{contact.contact}}
             </div>
 
 

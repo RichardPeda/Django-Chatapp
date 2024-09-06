@@ -8,13 +8,15 @@
 
     let currentMessage = {}
 
+
     async function sendMessage() {
+        console.log('test');
         let fd = new FormData();
         let token = '{{ csrf_token }}'
         let user = '{{ request.user }}'
         let id = '{{ id }}'
-        console.log(id);
-        
+
+
 
         let date = new Date()
         let container = document.getElementById('messageContainer')
@@ -65,25 +67,24 @@
 
 </script>
 
-<h1>Chat-App</h1>
 {% if request.user.first_name %}
 <h2>Welcome, {{request.user.first_name}} ({{request.user}})</h2>
 {% else %}
 <h2>Welcome, ({{request.user}})</h2>
 {% endif %}
 
-<form onsubmit="sendMessage(); return false" method="post">
+
+
+<div>
+
+
+    <h1>Your private conversation with {{receiver}}</h1>
+    
+    <form  onsubmit="sendMessage(); return false" method="post">
     {% csrf_token %}
     <input type="text" name="textmessage" id="inputMessage">
     <button>Send</button>
-</form>
-
-<div>
-    {% if receiver.first_name %}
-    <h1>Your conversation with {{receiver.first_name}} ({{receiver}})</h1>
-    {% else %}
-    <h1>Your conversation with ({{receiver}})</h1>
-    {% endif %}
+    </form>
 
     <div id="messageContainer">
         {% for message in messages %}
@@ -94,6 +95,8 @@
         {% endfor %}
     </div>
 </div>
+
+
 {% else %}
 <div>
     <h1>Your are not logged in</h1>
