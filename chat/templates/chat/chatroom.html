@@ -78,8 +78,15 @@
 
     function renderMessageHTML(user, message, date) {
         return /*html*/`
-        <div>
-                [${date}] ${user}: ${message}
+         <div class="single-message">
+            <div class="single-message-header">
+                <div class="author">${user}</div>
+                <div class="timestamp">
+                   ${date}
+                </div>
+
+            </div>
+           ${message}
         </div>
         `    }
 
@@ -145,8 +152,15 @@
 
     <div id="messageContainer">
         {% for message in messages %}
-        <div>
-            [{{message.created_at}}] {{request.user}}: {{ message.text }}
+        <div class="single-message">
+            <div class="single-message-header">
+                <div class="author">{{request.user}}</div>
+                <div class="timestamp">
+                    {{message.created_at}}
+                </div>
+
+            </div>
+            {{ message.text }}
         </div>
 
         {% endfor %}

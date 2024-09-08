@@ -5,13 +5,47 @@
 
 <div class="main-content register">
 
+    <script>
+        async function registerUser() {
+
+            let token = '{{ csrf_token }}'
+            let url = '/register/'
+           console.log('fetch');
+           console.log(password.value);
+           console.log(passwordConfirm.value);
+           
+           
+
+            if (password.value == passwordConfirm.value) {
+               
+                let fd = new FormData();
+                fd.append('csrfmiddlewaretoken', token);
+                fd.append('password', password.value)
+                fd.append('passwordConfirm', passwordConfirm.value)
+                fd.append('username', username.value)
+                fd.append('email', email.value)
+                fd.append('csrfmiddlewaretoken', token);
+                let resp = await fetch(url, {
+                    method: 'POST',
+                    body: fd
+                })
+                let message = await resp.json()
+                if(message.success){
+                    window.location.href = '/login'
+                }
+              
+                
+            }
+        }
+    </script>
+
     <h1>Register</h1>
 
     {% if wrongPassword %}
     <h1>Wrong username or password, please try again!</h1>
     {% endif %}
 
-    <form class="login-form" method="post" action="/register/">
+    <form class="login-form" onsubmit="registerUser(); return false">
         {% csrf_token %}
 
         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
@@ -20,9 +54,9 @@
         </div>
 
         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-            <input class="mdl-textfield__input" type="email" name="mail" id="mail"
+            <input class="mdl-textfield__input" type="email" name="email" id="email"
                 pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}" required>
-            <label class="mdl-textfield__label" for="mail">Email...</label>
+            <label class="mdl-textfield__label" for="email">Email...</label>
         </div>
 
         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
@@ -36,7 +70,7 @@
             <label class="mdl-textfield__label" for="passwordConfirm">Confirm passwort...</label>
         </div>
 
-      
+
         <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
             Register
         </button>

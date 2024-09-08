@@ -4,6 +4,7 @@
 {% load static %}
 
 <script>
+
     async function startChat(contact) {
         let token = '{{ csrf_token }}'
         let url = '/home/'
@@ -20,7 +21,6 @@
         let id = await resp.json()
         if (id) {
             window.location.href = `../chat?id=${id}`;
-
         }
 
     }
