@@ -6,31 +6,34 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core import serializers
 from django.http import JsonResponse
+from chat.utils import create_Contacts
 
-# Create your views here.
 
 @login_required(login_url='/login/')
 def home(request):
-
+    """
+    *This function returns the html start page with all existing contacts.*
+    *A post request creates a new chat if not existing and return the chat id.*
+    """
     if (request.method == 'POST'):
         contact = request.POST['contact']
         obj_contact = Contact.objects.get(contact = contact)
-       
         this_chat, created = Chat.objects.get_or_create(author = request.user, receiver = obj_contact)
         chat_id = this_chat.id
-      
         if this_chat:
-           
             return HttpResponse(str(chat_id))
 
     if(request.method == 'GET'):
-
         contacts = Contact.objects.all()     
         return render(request, 'chat/home.html', {'contacts': contacts})
 
 
 @login_required(login_url='/login/')
 def chat(request):
+    """
+    This function returns the html chat-page of the active chat based of the given id.
+    A post request creates a new chat message and returns it as JSON
+    """
     chat_id = request.GET.get('id')
     mychat = Chat.objects.get(id=chat_id)
    
@@ -42,27 +45,31 @@ def chat(request):
         contacts = Contact.objects.all()     
         receiver = mychat.receiver.contact
         chatmessages = Message.objects.filter(chat__id=chat_id)
-     
         return render(request, 'chat/chatroom.html',  {'messages' : chatmessages, 'id' : chat_id, 'receiver' : receiver, 'contacts':contacts})
 
 
-
 def login_view(request):
+    """
+    A GET-request returns the html of the login page
+    A POST-request checks the database if the user exist and response a JSON if this authentification was successfull.
+    """
     if(request.method == 'POST'):
         user = authenticate(request, username= request.POST['username'], password= request.POST['password'])
-        print('user: ',user)
         if user:
             login(request, user)
             return JsonResponse({"success":True})    
         else:
-            return JsonResponse({"success":False})  
-        
+            return JsonResponse({"success":False})    
     if(request.method == 'GET'):
-        print('GET WORKS')
-        print(request)
         return render(request, 'auth/login.html')
 
+
 def register(request):
+    """
+    A GET-request return the html of the register page.
+    A POST-request compares the given passwords and creates a new user and four contacts for testing the app.
+    The function returns a JSON when is was successfull.
+    """
     if(request.method == 'POST'):
         name = request.POST['username']
         email = request.POST['email']
@@ -70,11 +77,7 @@ def register(request):
         passwort_2 = request.POST['passwordConfirm']
         if passwort_1 == passwort_2:
             user = User.objects.create_user(username=name, password=passwort_1, email=email)
-            Contact.objects.get_or_create(contact = 'Mario', male = True)
-            Contact.objects.get_or_create(contact = 'Helena', male = False)
-            Contact.objects.get_or_create(contact = 'Florian', male = True)
-            Contact.objects.get_or_create(contact = 'Anna', male = False)
-
+            create_Contacts()
         if user:
             return JsonResponse({"success":True})   
         else:
@@ -83,5 +86,8 @@ def register(request):
 
 
 def logout_view(request):
+    """
+    The function logs the current user out and returns a JSON to redirect in the frontend.
+    """
     logout(request) 
     return JsonResponse({"redirect": True})

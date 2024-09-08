@@ -1,6 +1,5 @@
 from datetime import date
 from django.db import models
-
 from django.conf import settings
 
 class Contact(models.Model):
@@ -10,7 +9,6 @@ class Contact(models.Model):
 class Chat(models.Model):
     created_at = models.DateField(default=date.today)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,default=None, blank=True, null=True, related_name='author_chat_set')
-    # receiver = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=None, blank=True, null=True, related_name='receiver_chat_set')
     receiver = models.ForeignKey(Contact,on_delete=models.CASCADE, default=None, blank=True, null=True, related_name='receiver_chat_set')
 
 class Message(models.Model):
