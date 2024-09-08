@@ -17,7 +17,9 @@
       method: 'POST',
       body: fd
     })
-
+    let message = await resp.json()
+    if (message.redirect)
+      window.location.href = '/login'
 
   }
 </script>
@@ -40,21 +42,34 @@
     <header class="mdl-layout__header">
       <div class="mdl-layout__header-row">
         <!-- Title -->
-        <span class="mdl-layout-title">Welcome to Simple Chat {{request.user.first_name}}</span>
+
+        <span class="mdl-layout-title">Welcome to Simple Chat</span>
+
         <!-- Add spacer, to align navigation to the right -->
         <div class="mdl-layout-spacer"></div>
         <!-- Navigation. We hide it in small screens. -->
+        {% if request.user.is_authenticated %}
+        <nav class="mdl-navigation mdl-layout--large-screen-only">
+          <a class="mdl-navigation__link no-link">{{request.user}}</a>
+        </nav>
         <nav class="mdl-navigation mdl-layout--large-screen-only">
           {% csrf_token %}
           <a class="mdl-navigation__link" onclick="logoutUser()">Logout</a>
         </nav>
+        {% endif %}
+
       </div>
     </header>
     <div class="mdl-layout__drawer">
-      <span class="mdl-layout-title">Title</span>
+      <span class="mdl-layout-title">Simple Chat</span>
+      {% if request.user.is_authenticated %}
+      <nav class="mdl-navigation info">
+        <a class="mdl-navigation__link no-link">{{request.user}}</a>
+      </nav>
       <nav class="mdl-navigation">
         <a class="mdl-navigation__link" onclick="logoutUser()">Logout</a>
       </nav>
+      {% endif %}
     </div>
     <main class="mdl-layout__content">
       <div class="page-content">

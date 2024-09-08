@@ -1,45 +1,46 @@
-*{
+* {
     box-sizing: border-box;
 }
-body{
+body {
     margin: 0;
 }
 
-h1{
+h1 {
     font-size: 24px !important;
     font-family: Arial, Helvetica, sans-serif;
 }
+h6{
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
 
-.login-form{
+.login-form {
     display: flex;
     flex-direction: column;
     width: 300px;
 }
 .login-form input,
-.login-form button{
+.login-form button {
     margin: 12px;
 }
 
-.mdl-layout__container{
+.mdl-layout__container {
     position: fixed;
     top: 0;
 }
-.page-content{
+.page-content {
     display: grid;
     grid-template-columns: 240px 1fr;
-   height: 100%;
-   
+    height: 100%;
 }
 
-
-#contact-container{
+#contact-container {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
     width: 100%;
 }
-.contact{
-    
+.contact {
     display: flex;
     align-items: center;
     font-size: 24px;
@@ -47,26 +48,26 @@ h1{
     padding-right: 12px;
     margin: 12px;
     color: white;
-    
+
     cursor: pointer;
 }
 
-.chat-message-form{
+.chat-message-form {
     margin-top: 30px;
 }
 
-.sidebar{
+.sidebar {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 240px;
     height: 100%;
     flex-grow: 1;
-    background-color: rgb(63,81,181);
-    
+    background-color: rgb(63, 81, 181);
+    color: white;
 }
 
-.avatar{
+.avatar {
     height: 45px;
     width: 45px;
     object-fit: cover;
@@ -74,7 +75,7 @@ h1{
     border-radius: 100vh;
 }
 
-.main-content{
+.main-content {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -83,15 +84,15 @@ h1{
     margin-left: 12px;
 }
 
-.arrow-back{
+.arrow-back {
     position: relative;
     left: 0;
     top: 25px;
 }
-.arrow-back:hover{
+.arrow-back:hover {
     cursor: pointer;
 }
-.arrow-back:hover::before{
+.arrow-back:hover::before {
     content: '';
     position: absolute;
     left: 0;
@@ -101,50 +102,103 @@ h1{
     background-color: red;
 }
 
-#messageContainer{
+#messageContainer {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
     width: 100%;
 }
 
-#deleteMessage{
-    color: rgba(0,0,0,.4);
+#deleteMessage {
+    color: rgba(0, 0, 0, 0.4);
 }
 
-#deleteMessage::after{
+#deleteMessage::after {
     content: '      ...sending';
     color: green;
 }
 
-.register{
+.register,
+.login {
     grid-column: 1/3;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.single-message{
-    background-color: rgba(0,0,0,0.05);
+.single-message {
+    background-color: rgba(0, 0, 0, 0.05);
     padding: 12px;
     width: 100%;
     border-radius: 3px;
     margin-bottom: 6px;
 }
 
-.single-message-header{
+.single-message-header {
     display: flex;
     margin-bottom: 5px;
 }
-.author{
+.author {
     font-weight: bold;
     font-size: 18px;
     margin-right: 6px;
 }
-.timestamp{
+.timestamp {
     font-size: 12px;
 }
 
-.mdl-navigation__link{
+.mdl-navigation__link {
     cursor: pointer;
+    overflow: visible;
+}
+.no-link{
+    position: relative;
+    cursor: auto;
+    font-weight: bold;
+}
+.no-link::before{
+    position: absolute;
+    top: -18px;
+    content: 'username:';
+    font-weight: 400;
+}
+.mdl-layout__drawer .mdl-navigation .mdl-navigation__link.no-link:hover{
+    background-color: transparent;
+}
+
+.d-none {
+    display: none;
+}
+#passwordInputField {
+    position: relative;
+}
+#notification {
+    position: absolute;
+    color: red;
+    font-size: 12px;
+}
+#pwNotCorrect {
+    position: absolute;
+    top: 0;
+    color: red;
+}
+.login-headline {
+    display: flex;
+    align-items: center;
+}
+.login-headline h1 {
+    margin-right: 18px;
+}
+
+@media (max-width: 850px) {
+    .mobile-subprio {
+        display: none;
+    }
+    .page-content {
+        grid-template-columns: 1fr;
+    }
+    .main-content {
+        padding-inline: 5px;
+        margin-inline: auto;
+    }
 }

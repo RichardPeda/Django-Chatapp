@@ -50,12 +50,12 @@ def chat(request):
 def login_view(request):
     if(request.method == 'POST'):
         user = authenticate(request, username= request.POST['username'], password= request.POST['password'])
-
+        print('user: ',user)
         if user:
             login(request, user)
-            return HttpResponseRedirect('/home/')   
+            return JsonResponse({"success":True})    
         else:
-            return render(request, 'auth/login.html', {'wrongPassword': True})
+            return JsonResponse({"success":False})  
         
     if(request.method == 'GET'):
         print('GET WORKS')
@@ -83,7 +83,5 @@ def register(request):
 
 
 def logout_view(request):
-    logout(request)
-    # return HttpResponseRedirect('/login/')   
-    # return HttpResponsePermanentRedirect('/login/')   
-    return redirect('/home/')       
+    logout(request) 
+    return JsonResponse({"redirect": True})

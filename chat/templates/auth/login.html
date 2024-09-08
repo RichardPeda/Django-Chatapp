@@ -3,28 +3,65 @@
 
 {% block content %}
 
+<script>
+    
+    async function loginUser() {
+        console.log('login works');
+        document.getElementById('login-spinner').classList.remove('d-none')
+        let token = '{{ csrf_token }}'
+        let url = '/login/'
 
-<div class="sidebar">
+        let fd = new FormData();
+        fd.append('csrfmiddlewaretoken', token);
+        fd.append('password', password.value)
+        fd.append('username', username.value)
 
-   
-</div>
+        let resp = await fetch(url, {
+            method: 'POST',
+            body: fd
+        })
+        
+        let message = await resp.json()
+        if (message.success)
+            window.location.href = '/home'
+        else document.getElementById('pwNotCorrect').classList.remove('d-none')
 
 
-<div class="main-content">
-    <h1>Login</h1>
+    }
+</script>
 
-    {% if wrongPassword %}
-    <h1>Wrong username or password, please try again!</h1>
-    {% endif %}
+<div class="main-content login">
+    <div class="login-headline">
+        <h1>Login</h1>
+        <div id="login-spinner" class="mdl-spinner mdl-spinner--single-color mdl-js-spinner is-active d-none"></div>
+    </div>
 
-    <form class="login-form" method="post" action="/login/">
+
+    <div id="pwNotCorrect" class="d-none">
+        <h1>Wrong username or password, please try again!</h1>
+    </div>
+
+
+
+    <form class="login-form" onsubmit="loginUser(); return false">
         {% csrf_token %}
-        <input type="text" name="username" placeholder="username" />
-        <input type="password" name="password" placeholder="password" />
-        <button>Login</button>
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input class="mdl-textfield__input " name="username" id="username" required autocomplete="username">
+            <label class="mdl-textfield__label" for="username">Username...</label>
+        </div>
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input class="mdl-textfield__input" type="password" name="password" id="password" minlength="5" required
+                autocomplete="new-password">
+            <label class="mdl-textfield__label" for="password">Passwort...</label>
+        </div>
+        <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+            Login
+        </button>
     </form>
 
     <p>Not registered yet, register <a href="/register/">here</a></p>
+    <!-- MDL Spinner Component with Single Color -->
+
 </div>
 
 

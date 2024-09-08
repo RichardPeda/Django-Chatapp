@@ -11,7 +11,6 @@
 
 
     async function sendMessage() {
-        console.log('test');
         let fd = new FormData();
         let token = '{{ csrf_token }}'
         let user = '{{ request.user }}'
@@ -47,7 +46,6 @@
                 }
 
                 currentMessage = JSON.parse(message)
-                console.log(currentMessage);
                 let parsDate = Date.parse(currentMessage.fields.created_at)
                 let actDate = new Date(parsDate)
                 actDate = actDate.toLocaleDateString("en-US", {
@@ -117,7 +115,7 @@
 </script>
 
 
-<div class="sidebar">
+<div class="sidebar mobile-subprio">
 
     <h5 style="color: white;">Select a contact to chat</h5>
 

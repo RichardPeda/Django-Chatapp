@@ -8,10 +8,8 @@
     async function startChat(contact) {
         let token = '{{ csrf_token }}'
         let url = '/home/'
-
         let fd = new FormData();
         fd.append('contact', contact);
-
         fd.append('csrfmiddlewaretoken', token);
 
         let resp = await fetch(url, {
@@ -19,16 +17,15 @@
             body: fd
         })
         let id = await resp.json()
-        if (id) {
+        if (id) 
             window.location.href = `../chat?id=${id}`;
-        }
 
     }
 </script>
 
 {% if request.user.is_authenticated %}
 <div class="sidebar">
-
+   
     <h5 style="color: white;">Select a contact to chat</h5>
 
     <div id="contact-container">
@@ -47,14 +44,14 @@
         {% endfor %}
     </div>
 </div>
-<div class="main-content">
+<div class="main-content mobile-subprio">
 
     <h1>No active Chat</h1>
 
 
 </div>
 {% else %}
-<div class="sidebar"></div>
+<div class="sidebar mobile-prio"></div>
 <div class="main-content">
     <div>
         <h1>Du bist nicht eingeloggt</h1>
