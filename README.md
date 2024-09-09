@@ -18,5 +18,5 @@ https://www.python.org/downloads/
 ```
  3. Go to the folder "django_chat_app"
  4. Generate the database with command `python manage.py migrate`
- 5. Run the command `python3 manage.py createsuperuser` to have access to the admin page
- 6. Run the command `python3 manage.py runserver` to start the app on your machine
+ 5. Run the command `python manage.py createsuperuser` to have access to the admin page
+ 6. Run the command `python manage.py runserver` to start the app on your machine
