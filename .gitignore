@@ -6,6 +6,11 @@ __pycache__
 *.sqlite3
 media
 
+# Migrations
+**/migrations/**
+!**/migrations
+!**/migrations/__init__.py
+
 # Backup files # 
 *.bak 
 
